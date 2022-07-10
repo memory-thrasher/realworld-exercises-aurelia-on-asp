@@ -22,23 +22,30 @@
         </li>
         <li class="${'nav-item' + (activeRoute === 'login' ? ' active' : '')}"
             show.bind="!sharedState.isAuthenticated">
-          <a class="nav-link" route-href="route: login">Sign in
-             <i class="ion-log-in"></i>&nbsp;         
+          <a class="nav-link" route-href="route: login">
+            Sign in
+            <i class="ion-log-in"></i>&nbsp;
           </a>
         </li>
         <li class="${'nav-item' + (activeRoute === 'register' ? ' active' : '')}"
             show.bind="!sharedState.isAuthenticated">
-          
+          <a class="nav-link" route-href="route: register">
+            Sign up
+            <i class="ion-compose"></i>&nbsp;
           </a>
         </li>
         <li class="${'nav-item' + (activeRoute === 'profile' ? ' active' : '')}"
             show.bind="sharedState.currentUser && sharedState.isAuthenticated">
           <a class="nav-link" route-href="route: profile; params.bind: {name: sharedState.currentUser.username}">${sharedState.currentUser.username}</a>
         </li>
-<<<<<<< HEAD
-=======
-        
->>>>>>> 10ec65f (Adds home icons)
+        <<<<<<< HEAD
+        =======
+        <li class="${'nav-item' + (activeRoute === 'logout' ? ' active' : '')}"
+            show.bind="sharedState.currentUser && sharedState.isAuthenticated">
+          <a class="nav-link" click.delegate="logout()"><i class="ion-log-out"></i>&nbsp;Logout</a>
+
+
+          >>>>>>> 10ec65f (Adds home icons)
       </ul>
     </div>
   </nav>
