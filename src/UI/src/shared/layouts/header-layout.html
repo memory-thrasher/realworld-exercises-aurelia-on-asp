@@ -43,12 +43,6 @@
             <i class="ion-log-out"></i>&nbsp;Logout
           </a>
         </li>
-        <li class="${'nav-item' + (activeRoute === 'logout' ? ' active' : '')}"
-            show.bind="sharedState.currentUser && sharedState.isAuthenticated">
-          <a class="nav-link" click.delegate="logout()">
-            <i class="ion-log-out"></i>&nbsp;Logout
-          </a>
-        </li>
       </ul>
     </div>
   </nav>
