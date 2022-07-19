@@ -52,4 +52,12 @@ export class EditorComponent {
         this.router.navigateToRoute('article', {slug: this.slug})
       })
   }
+
+  get canSave() {
+    if (this.type === 'post') {
+      return this.article.title !== '' && this.article.description !== '' && this.article.body;
+    } else {
+      return this.article.title !== '' && this.article.description !== '' && this.article.body;
+    }
+  }
 }
