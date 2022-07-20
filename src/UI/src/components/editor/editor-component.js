@@ -1,4 +1,4 @@
-import {inject, observable} from 'aurelia-framework';
+import {inject, observable, computedFrom} from 'aurelia-framework';
 import {Router} from 'aurelia-router'
 import {ArticleService} from "../../shared/services/article-service";
 
@@ -52,12 +52,12 @@ export class EditorComponent {
         this.router.navigateToRoute('article', {slug: this.slug})
       })
   }
+  @computedFrom
+  
 
   get canSave() {
-    if (this.type === 'post') {
+     (this.type === 'post') 
       return this.article.title !== '' && this.article.description !== '' && this.article.body;
-    } else {
-      return this.article.title !== '' && this.article.description !== '' && this.article.body;
-    }
+      
   }
 }
