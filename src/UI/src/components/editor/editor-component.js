@@ -1,6 +1,6 @@
 import {inject, observable, computedFrom} from 'aurelia-framework';
 import {Router} from 'aurelia-router'
-import {ArticleService} from "../../shared/services/article-service";
+import {ArticleService} from "../../shared/services/article-service"; 
 
 @inject(ArticleService, Router)
 export class EditorComponent {
@@ -52,7 +52,7 @@ export class EditorComponent {
         this.router.navigateToRoute('article', {slug: this.slug})
       })
   }
-  @computedFrom
+  @computedFrom ('article.title', 'article.description', 'article.body')
   
 
   get canSave() {
