@@ -7,11 +7,12 @@ export function status(response) {
     if (response.headers.get('content-type').includes('application/json'))
       return response.json();
   }
-  
-  throw new HttpError(response);
+
+  return response.json().then(body => { throw new HttpError(body); });
 }
 
 export function parseError(error) {
   if (!(error instanceof Error))
     return new Promise((resolve, reject) => reject(error.json()))
+  throw error;
 }
