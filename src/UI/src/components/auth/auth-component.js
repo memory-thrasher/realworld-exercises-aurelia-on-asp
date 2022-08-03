@@ -34,17 +34,21 @@ export class AuthComponent {
   }
 
   submit() {
-    this.errors = null;
+    this.errors = null 
 
-    const credentials = {
-      username: this.username,
-      email: this.email,
-      password: this.password
-    };
+      const credentials = {
+        username: this.username,
+        email: this.email,
+        password: this.password
+      };
     this.userService.attemptAuth(this.type, credentials)
       .then(data => this.router.navigateToRoute('home'))
-      .catch(promise => {
-        promise.then(err => this.errors = err.errors)
-      });
+      .catch(this.password = '')
+    
+
+      //.catch(promise => {
+        //promise.then(err => this.errors = err.errors)}
+        
+      ;
   }
 }
