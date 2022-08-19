@@ -45,7 +45,6 @@ export class AuthComponent {
       .then(data => this.router.navigateToRoute('home'))
       .catch(result => {
         this.password = '';
-        console.log(result.msg.errors);
         this.errors = result.msg.errors;
       });
     
