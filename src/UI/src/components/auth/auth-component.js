@@ -43,8 +43,10 @@ export class AuthComponent {
     };
     this.userService.attemptAuth(this.type, credentials)
       .then(data => this.router.navigateToRoute('home'))
-      .catch(promise => {
-        promise.then(err => this.errors = err.errors)
+      .catch(result => {
+        this.password = '';
+        this.errors = result.msg.errors;
       });
+    
   }
 }
