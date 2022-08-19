@@ -34,7 +34,7 @@ export class AuthComponent {
   }
 
   submit() {
-    this.errors = null
+    this.errors = null;
 
     const credentials = {
       username: this.username,
@@ -48,10 +48,6 @@ export class AuthComponent {
         console.log(result.msg.errors);
         this.errors = result.msg.errors;
       });
-
-    //.catch(promise => {
-       // promise.then(err => this.errors = err.errors)
-     // });
     
   }
 }

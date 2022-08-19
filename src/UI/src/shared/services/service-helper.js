@@ -13,6 +13,6 @@ export function status(response) {
 
 export function parseError(error) {
   if (!(error instanceof Error))
-   return new result((resolve, reject) => reject(error.json()))
+   return new promise((resolve, reject) => reject(error.json()))
   throw error;
 }
