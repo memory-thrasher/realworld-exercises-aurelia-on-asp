@@ -15,7 +15,20 @@ using System.Linq;
 namespace Realworlddotnet.Core.Dto
 {
 
-    public record NewArticleDto(string Title, string Description, string Body, IEnumerable<string> TagList);
+    public record NewArticleDto(string Title, string Description, string Body, IEnumerable<string> TagList = null)
+    {
+
+        public Article ToArticle()
+        {
+            return new Article()
+            {
+                Title = Title,
+                Description = Description,
+                Body = Body,
+                Tags = TagList == null ? new Tag[0] : TagList.Select(x => new Tag() { Id = x }).ToList()
+            };
+        }
+    }
 
     public record ArticleUpdateDto(string? Title, string? Description, string? Body) : IValidatableObject
     {
@@ -28,6 +41,13 @@ namespace Realworlddotnet.Core.Dto
                     $"At least on of the fields: {nameof(Title)}, {nameof(Description)}, {nameof(Body)} must be filled"
                 );
             }
+        }
+
+        public void UpdateArticle(Article a)
+        {
+            a.Title = Title;
+            a.Description = Description;
+            a.Body = Body;
         }
     }
 

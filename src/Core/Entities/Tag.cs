@@ -1,30 +1,17 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Realworlddotnet.Core.Entities;
-using System;
-using Realworlddotnet.Core.Dto;
-using Realworlddotnet.Infrastructure.Utils;
-using System.Threading;
-using System.Threading.Tasks;
-using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Mvc;
-using Realworlddotnet.Core.Services.Interfaces;
-using Realworlddotnet.Infrastructure.Utils.Interfaces;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Realworlddotnet.Core.Entities
 {
-
-    public class Tag
+    public partial class Tag
     {
-        public Tag(string id)
+        public Tag()
         {
-            Id = id;
+            Articles = new HashSet<Article>();
         }
 
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
 
-        public ICollection<Article> Articles { get; set; } = null!;
+        public virtual ICollection<Article> Articles { get; set; }
     }
-
 }

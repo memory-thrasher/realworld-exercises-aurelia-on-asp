@@ -138,44 +138,45 @@ using Microsoft.AspNetCore.Hosting;
 //}
 
 //.net5:
-//var config = new ConfigurationBuilder()
-//    .AddEnvironmentVariables()
-//    .AddJsonFile("appsettings.json")
-//    .Build();
+var config = new ConfigurationBuilder()
+    .AddEnvironmentVariables()
+    .AddJsonFile("appsettings.json")
+    .Build();
 
-//var host = WebHost.CreateBuilder()
-//    .UseConfiguration(config)
-//    .UseKestrel()
-//    .UseUrls($"http://+:5000")
-//    .UseStartup<Startup>()
-//    .Build();
+var host = new WebHostBuilder()
+    .UseConfiguration(config)
+    .UseKestrel()
+    .UseUrls($"http://+:5000")
+    .UseStartup<Startup>()
+    .Build();
 
-//await host.RunAsync();
+await host.RunAsync();
 
 
 //redoing setup to work around efcore issue 25053
-public class Program
-{
+//public class Program
+//{
 
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
+//    public static void Main(string[] args)
+//    {
+//        CreateHostBuilder(args).Build().Run();
+//    }
 
-    public static IHostBuilder CreateHostBuilder(string[] args) {
-        IHostBuilder hbuilder = Host.CreateDefaultBuilder(args);
-        hbuilder.ConfigureHostConfiguration(x => x
-                .AddEnvironmentVariables()
-                .AddJsonFile("appsettings.json"));
-        hbuilder.ConfigureWebHostDefaults(iwhb =>
-        {
-            iwhb
-                .UseKestrel()
-                .UseUrls($"http://+:5000")
-                .UseStartup<Startup>();
-        });
-        return hbuilder;
-    }
+//    public static IHostBuilder CreateHostBuilder(string[] args) {
+//        IHostBuilder hbuilder = Host.CreateDefaultBuilder(args);
+//        hbuilder.ConfigureHostConfiguration(x => x
+//                .AddEnvironmentVariables()
+//                .AddJsonFile("appsettings.json"));
+//        hbuilder.ConfigureServices(isc => Startup.ConfigureServices(isc));
+//        hbuilder.ConfigureWebHostDefaults(iwhb =>
+//        {
+//            iwhb
+//                .UseKestrel()
+//                .UseUrls($"http://+:5000")
+//                .UseStartup<Startup>();
+//        });
+//        return hbuilder;
+//    }
 
-}
+//}
 

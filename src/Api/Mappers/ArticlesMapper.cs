@@ -36,7 +36,7 @@ namespace Realworlddotnet.Api.Mappers
         public static ArticleResponse MapFromArticleEntity(Article article)
         {
             var tags = article.Tags.Select(tag => tag.Id);
-            var author = article.Author;
+            var author = article.AuthorUsernameNavigation;
             var result = new ArticleResponse(
                 article.Slug,
                 article.Title,
@@ -49,9 +49,9 @@ namespace Realworlddotnet.Api.Mappers
                     author.Username,
                     author.Image,
                     author.Bio,
-                    author.Followers.Any()),
-                article.Favorited,
-                article.FavoritesCount);
+                    author.FollowedUserUsernameNavigations.Any()),
+                article.ArticleFavorites.Any(),
+                article.ArticleFavorites.Count);
             return result;
         }
 

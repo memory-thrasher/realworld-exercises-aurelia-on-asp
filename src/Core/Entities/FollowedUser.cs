@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Realworlddotnet.Core.Entities
 {
-    public partial class ArticleFavorite
+    public partial class FollowedUser
     {
         public string Username { get; set; } = null!;
-        public Guid ArticleId { get; set; }
-        public int ArticleFavoriteId { get; set; }
+        public string FollowerUsername { get; set; } = null!;
+        public int FollowedUsersId { get; set; }
 
-        public virtual Article Article { get; set; } = null!;
+        public virtual User FollowerUsernameNavigation { get; set; } = null!;
         public virtual User UsernameNavigation { get; set; } = null!;
     }
 }

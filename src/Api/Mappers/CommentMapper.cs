@@ -39,10 +39,10 @@ namespace Realworlddotnet.Api.Mappers
         public static CommentModel MapFromCommentEntity(CommentEntity commentEntity)
         {
             var author = new Author(
-                commentEntity.Author.Username,
-                commentEntity.Author.Image,
-                commentEntity.Author.Bio,
-                commentEntity.Author.Followers.Any());
+                commentEntity.UsernameNavigation.Username,
+                commentEntity.UsernameNavigation.Image,
+                commentEntity.UsernameNavigation.Bio,
+                commentEntity.UsernameNavigation.FollowedUserUsernameNavigations.Any());
             return new CommentModel(commentEntity.Id,
                 commentEntity.CreatedAt,
                 commentEntity.UpdatedAt,

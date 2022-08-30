@@ -41,14 +41,14 @@ namespace E2e.Tests
                 await using (var context = new ConduitContext(contextOptions))
                 {
                     var repo = new ConduitRepository(context);
-                    await repo.AddUserAsync(new User(new NewUserDto(username1, "test1@test.com", "Test1234")));
+                    await repo.AddUserAsync(new NewUserDto(username1, "test1@test.com", "Test1234").ToUser());
                     await repo.SaveChangesAsync(CancellationToken.None);
                 }
 
                 await using (var context = new ConduitContext(contextOptions))
                 {
                     var repo = new ConduitRepository(context);
-                    await repo.AddUserAsync(new User(new NewUserDto(username2, "test2@test.com", "Test1234")));
+                    await repo.AddUserAsync(new NewUserDto(username2, "test2@test.com", "Test1234").ToUser());
                     await repo.SaveChangesAsync(CancellationToken.None);
                 }
 
@@ -71,9 +71,8 @@ namespace E2e.Tests
             const string username1 = "EvdV";
             const string username2 = "ACM";
 
-            var user1 = new User(new NewUserDto(username1, "test1@test.com", "Test1234"));
-            var user2 = new User(new NewUserDto(username2, "test2@test.com", "Test1234"));
-
+            var user1 = new NewUserDto(username1, "test1@test.com", "Test1234").ToUser();
+            var user2 = new NewUserDto(username2, "test2@test.com", "Test1234").ToUser();
 
             var connectionString = "Filename=:memory:";
             var connection = new SqliteConnection(connectionString);
@@ -133,10 +132,10 @@ namespace E2e.Tests
             const string username1 = "EvdV";
             const string username2 = "ACM";
 
-            var user1 = new User(new NewUserDto(username1, "test1@test.com", "Test1234"));
-            var user2 = new User(new NewUserDto(username2, "test2@test.com", "Test1234"));
+            var user1 = new NewUserDto(username1, "test1@test.com", "Test1234").ToUser();
+            var user2 = new NewUserDto(username2, "test2@test.com", "Test1234").ToUser();
 
-            var article1 = new Article("title1", "description1", "body1");
+            var article1 = new NewArticleDto("title1", "description1", "body1").ToArticle();
 
 
             var connectionString = "Filename=:memory:";
@@ -166,8 +165,7 @@ namespace E2e.Tests
                 await using (var context = new ConduitContext(contextOptions))
                 {
                     var repo = new ConduitRepository(context);
-                    var usr1 = await repo.GetUserByUsernameAsync(username1, CancellationToken.None);
-                    article1.Author = usr1;
+                    article1.AuthorUsername = username1;
                     repo.AddArticle(article1);
                     await repo.SaveChangesAsync(CancellationToken.None);
                 }
@@ -187,7 +185,7 @@ namespace E2e.Tests
                 {
                     var repo = new ConduitRepository(context);
                     var article = await repo.GetArticleBySlugAsync(slug, true, CancellationToken.None);
-                    article!.Author.Username.Should().Be(username1);
+                    article!.AuthorUsernameNavigation.Username.Should().Be(username1);
                 }
 
                 Comment comment1;
@@ -196,7 +194,7 @@ namespace E2e.Tests
                 {
                     var repo = new ConduitRepository(context);
                     var article = await repo.GetArticleBySlugAsync(slug, true, CancellationToken.None);
-                    comment1 = new Comment("commentbody1", username1, article!.Id);
+                    comment1 = new Comment() { Body = "commentbody1", Username = username1, ArticleId = article!.Id };
                     repo.AddArticleComment(comment1);
                     await repo.SaveChangesAsync(CancellationToken.None);
                 }
@@ -211,7 +209,7 @@ namespace E2e.Tests
                     article.Comments.Count.Should().Be(1);
                     var firstComment = article.Comments.First();
                     firstComment.Username.Should().Be(username1);
-                    firstComment.Author.Followers.Should().HaveCount(1);
+                    firstComment.UsernameNavigation.FollowedUserUsernameNavigations.Should().HaveCount(1);
                     repo.RemoveArticleComment(firstComment);
                     await repo.SaveChangesAsync(CancellationToken.None);
                 }

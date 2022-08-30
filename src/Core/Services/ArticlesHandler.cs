@@ -31,14 +31,14 @@ namespace Realworlddotnet.Core.Services
             var tags = await _repository.UpsertTagsAsync(newArticle.TagList, cancellationToken);
             await _repository.SaveChangesAsync(cancellationToken);
 
-            var article = new Article(
-                    newArticle.Title,
-                    newArticle.Description,
-                    newArticle.Body
-                )
-            { Author = user, Tags = tags.ToList() }
-                ;
-
+            var article = new Article()
+            {
+                Title = newArticle.Title,
+                Description = newArticle.Description,
+                Body = newArticle.Body,
+                AuthorUsername = user.Username,
+                Tags = tags.ToList()
+            };
             _repository.AddArticle(article);
             await _repository.SaveChangesAsync(cancellationToken);
             return article;
@@ -58,7 +58,7 @@ namespace Realworlddotnet.Core.Services
                 });
             }
 
-            if (username != article.Author.Username)
+            if (username != article.AuthorUsernameNavigation.Username)
             {
                 throw new ProblemDetailsException(new ValidationProblemDetails
                 {
@@ -67,7 +67,7 @@ namespace Realworlddotnet.Core.Services
                 });
             }
 
-            article.UpdateArticle(update);
+            update.UpdateArticle(article);
             await _repository.SaveChangesAsync(cancellationToken);
             return article;
         }
@@ -85,7 +85,7 @@ namespace Realworlddotnet.Core.Services
                 });
             }
 
-            if (username != article.Author.Username)
+            if (username != article.AuthorUsernameNavigation.Username)
             {
                 throw new ProblemDetailsException(new ValidationProblemDetails
                 {
@@ -141,7 +141,7 @@ namespace Realworlddotnet.Core.Services
                 });
             }
 
-            var comment = new Comment(commentDto.body, user.Username, article.Id);
+            var comment = new Comment() { Body = commentDto.body, Username = user.Username, ArticleId = article.Id };
             _repository.AddArticleComment(comment);
 
             await _repository.SaveChangesAsync(cancellationToken);
@@ -174,7 +174,7 @@ namespace Realworlddotnet.Core.Services
                 });
             }
 
-            if (comment.Author.Username != username)
+            if (comment.Username != username)
             {
                 throw new ProblemDetailsException(new ValidationProblemDetails
                 {
@@ -213,7 +213,7 @@ namespace Realworlddotnet.Core.Services
 
             if (articleFavorite is null)
             {
-                _repository.AddArticleFavorite(new ArticleFavorite(user.Username, article.Id));
+                _repository.AddArticleFavorite(new ArticleFavorite() { Username = user.Username, ArticleId = article.Id });
                 await _repository.SaveChangesAsync(cancellationToken);
             }
 

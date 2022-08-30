@@ -68,7 +68,7 @@ namespace Realworlddotnet.Data.Services
             {
                 if (!dbTags.Exists(x => x.Id == tag))
                 {
-                    _context.Tags.Add(new Tag(tag));
+                    _context.Tags.Add(new Tag() { Id = tag });
                 }
             }
 
@@ -90,7 +90,7 @@ namespace Realworlddotnet.Data.Services
 
             if (!string.IsNullOrWhiteSpace(articlesQuery.Author))
             {
-                query = query.Where(x => x.Author.Username == articlesQuery.Author);
+                query = query.Where(x => x.AuthorUsername == articlesQuery.Author);
             }
 
             if (!string.IsNullOrWhiteSpace(articlesQuery.Tag))
@@ -98,23 +98,23 @@ namespace Realworlddotnet.Data.Services
                 query = query.Where(x => x.Tags.Any(tag => tag.Id == articlesQuery.Tag));
             }
 
-            query = query.Include(x => x.Author);
+            query = query.Include(x => x.AuthorUsernameNavigation);
 
             if (username is not null)
             {
-                query = query.Include(x => x.Author)
-                    .ThenInclude(x => x.Followers.Where(fu => fu.FollowerUsername == username));
+                query = query.Include(x => x.AuthorUsernameNavigation)
+                    .ThenInclude(x => x.FollowedUserFollowerUsernameNavigations.Where(fu => fu.Username == username));
             }
 
             if (isFeed)
             {
-                query = query.Where(x => x.Author.Followers.Any());
+                query = query.Where(x => x.AuthorUsernameNavigation.FollowedUserFollowerUsernameNavigations.Any());
             }
 
             var total = await query.CountAsync(cancellationToken);
             var pageQuery = query
                 .Skip(articlesQuery.Offset).Take(articlesQuery.Limit)
-                .Include(x => x.Author)
+                .Include(x => x.AuthorUsernameNavigation)
                 .Include(x => x.Tags)
                 .AsNoTracking();
 
@@ -127,8 +127,9 @@ namespace Realworlddotnet.Data.Services
             CancellationToken cancellationToken)
         {
             var query = _context.Articles
-                .Include(x => x.Author)
-                .Include(x => x.Tags);
+                .Include(x => x.AuthorUsernameNavigation)
+                .Include(x => x.Tags)
+                .Include(x => x.ArticleFavorites);
 
             if (asNoTracking)
             {
@@ -143,9 +144,6 @@ namespace Realworlddotnet.Data.Services
                 return article;
             }
 
-            var favoriteCount = await _context.ArticleFavorites.CountAsync(x => x.ArticleId == article.Id);
-            article.Favorited = favoriteCount > 0;
-            article.FavoritesCount = favoriteCount;
             return article;
         }
 
@@ -184,8 +182,8 @@ namespace Realworlddotnet.Data.Services
             CancellationToken cancellationToken)
         {
             return await _context.Comments.Where(x => x.Article.Slug == slug)
-                .Include(x => x.Author)
-                .ThenInclude(x => x.Followers.Where(fu => fu.FollowerUsername == username))
+                .Include(x => x.UsernameNavigation)
+                .ThenInclude(x => x.FollowedUserFollowerUsernameNavigations.Where(fu => fu.Username == username))
                 .ToListAsync(cancellationToken);
         }
 
@@ -202,18 +200,17 @@ namespace Realworlddotnet.Data.Services
         public Task<bool> IsFollowingAsync(string username, string followerUsername, CancellationToken cancellationToken)
         {
             return _context.FollowedUsers.AnyAsync(
-                x => x.Username == username && x.FollowerUsername == followerUsername,
-                cancellationToken);
+                x => x.Username == username && x.FollowerUsername == followerUsername, cancellationToken);
         }
 
         public void Follow(string username, string followerUsername)
         {
-            _context.FollowedUsers.Add(new UserLink(username, followerUsername));
+            _context.FollowedUsers.Add(new FollowedUser() { Username = username, FollowerUsername = followerUsername });
         }
 
         public void UnFollow(string username, string followerUsername)
         {
-            _context.FollowedUsers.Remove(new UserLink(username, followerUsername));
+            _context.FollowedUsers.Remove(_context.FollowedUsers.Where(x => x.Username == username && x.FollowerUsername == followerUsername).Single());
         }
     }
 

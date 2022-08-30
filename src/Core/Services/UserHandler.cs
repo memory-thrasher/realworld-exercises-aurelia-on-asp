@@ -28,7 +28,7 @@ namespace Realworlddotnet.Core.Services
 
         public async Task<UserDto> CreateAsync(NewUserDto newUser, CancellationToken cancellationToken)
         {
-            var user = new User(newUser);
+            var user = new User() { Username = newUser.Username, Email = newUser.Email, Password = newUser.Password };
             await _repository.AddUserAsync(user);
             await _repository.SaveChangesAsync(cancellationToken);
             var token = _tokenGenerator.CreateToken(user.Username);
@@ -39,7 +39,9 @@ namespace Realworlddotnet.Core.Services
             string username, UpdatedUserDto updatedUser, CancellationToken cancellationToken)
         {
             var user = await _repository.GetUserByUsernameAsync(username, cancellationToken);
-            user.UpdateUser(updatedUser);
+            user.Username = updatedUser.Username;
+            user.Email = updatedUser.Email;
+            user.Password = updatedUser.Password;
             await _repository.SaveChangesAsync(cancellationToken);
             var token = _tokenGenerator.CreateToken(user.Username);
             return new UserDto(user.Username, user.Email, token, user.Bio, user.Image);
