@@ -23,9 +23,10 @@ using Realworlddotnet.Infrastructure.Utils.Interfaces;
 using Serilog;
 using System.Threading;
 using System;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Hosting;
 using Realworlddotnet.Api;
+using Microsoft.AspNetCore.Hosting;
 
 //var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +39,7 @@ using Realworlddotnet.Api;
 
 // setup database connection (used for in memory SQLite).
 // SQLite in memory requires an open connection during the application lifetime
-#pragma warning disable S125
+//#pragma warning disable S125
 // to use a file based SQLite use: "Filename=../realworld.db";
 //#pragma warning restore S125
 //const string connectionString = "Filename=:memory:";
@@ -137,16 +138,44 @@ using Realworlddotnet.Api;
 //}
 
 //.net5:
-var config = new ConfigurationBuilder()
-    .AddEnvironmentVariables()
-    .AddJsonFile("appsettings.json")
-    .Build();
+//var config = new ConfigurationBuilder()
+//    .AddEnvironmentVariables()
+//    .AddJsonFile("appsettings.json")
+//    .Build();
 
-var host = new WebHostBuilder()
-    .UseConfiguration(config)
-    .UseKestrel()
-    .UseUrls($"http://+:5000")
-    .UseStartup<Startup>()
-    .Build();
+//var host = WebHost.CreateBuilder()
+//    .UseConfiguration(config)
+//    .UseKestrel()
+//    .UseUrls($"http://+:5000")
+//    .UseStartup<Startup>()
+//    .Build();
 
-await host.RunAsync();
+//await host.RunAsync();
+
+
+//redoing setup to work around efcore issue 25053
+public class Program
+{
+
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) {
+        IHostBuilder hbuilder = Host.CreateDefaultBuilder(args);
+        hbuilder.ConfigureHostConfiguration(x => x
+                .AddEnvironmentVariables()
+                .AddJsonFile("appsettings.json"));
+        hbuilder.ConfigureWebHostDefaults(iwhb =>
+        {
+            iwhb
+                .UseKestrel()
+                .UseUrls($"http://+:5000")
+                .UseStartup<Startup>();
+        });
+        return hbuilder;
+    }
+
+}
+
