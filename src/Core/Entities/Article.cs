@@ -17,11 +17,11 @@ namespace Realworlddotnet.Core.Entities
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string Body { get; set; } = null!;
-        public string AuthorUsername { get; set; } = null!;
+        public string? AuthorUsername { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
-        public virtual User AuthorUsernameNavigation { get; set; } = null!;
+        public virtual User? AuthorUsernameNavigation { get; set; }
         public virtual ICollection<ArticleFavorite> ArticleFavorites { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
 
