@@ -33,11 +33,14 @@ namespace Realworlddotnet.Core.Services
 
             var article = new Article()
             {
+                Slug = newArticle.Title.GenerateSlug(),
                 Title = newArticle.Title,
                 Description = newArticle.Description,
                 Body = newArticle.Body,
                 AuthorUsername = user.Username,
-                Tags = tags.ToList()
+                Tags = tags.ToList(),
+                CreatedAt = DateTimeOffset.Now,
+                UpdatedAt = DateTimeOffset.Now
             };
             _repository.AddArticle(article);
             await _repository.SaveChangesAsync(cancellationToken);
@@ -183,7 +186,7 @@ namespace Realworlddotnet.Core.Services
                 });
             }
 
-            comments.Remove(comment);
+            _repository.RemoveArticleComment(comment);
             await _repository.SaveChangesAsync(cancellationToken);
         }
 
