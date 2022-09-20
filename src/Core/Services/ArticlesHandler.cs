@@ -33,6 +33,7 @@ namespace Realworlddotnet.Core.Services
 
             var article = new Article()
             {
+                Id = Guid.NewGuid(),
                 Slug = newArticle.Title.GenerateSlug(),
                 Title = newArticle.Title,
                 Description = newArticle.Description,
