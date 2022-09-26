@@ -145,7 +145,7 @@ namespace Realworlddotnet.Core.Services
                 });
             }
 
-            var comment = new Comment() { Body = commentDto.body, Username = user.Username, ArticleId = article.Id };
+            var comment = new Comment() { Body = commentDto.body, Username = user.Username, ArticleId = article.Id, CreatedAt = System.DateTimeOffset.Now };
             _repository.AddArticleComment(comment);
 
             await _repository.SaveChangesAsync(cancellationToken);

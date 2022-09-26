@@ -4,7 +4,7 @@
     [Title]          NVARCHAR (MAX)     NOT NULL,
     [Description]    NVARCHAR (MAX)     NOT NULL,
     [Body]           NVARCHAR (MAX)     NOT NULL,
-    [AuthorUsername] NVARCHAR (450)     NULL,
+    [AuthorUsername] NVARCHAR (450)     NOT NULL,
     [CreatedAt]      DATETIMEOFFSET (7) NOT NULL,
     [UpdatedAt]      DATETIMEOFFSET (7) NOT NULL,
     CONSTRAINT [PK_Articles] PRIMARY KEY CLUSTERED ([Id] ASC),
