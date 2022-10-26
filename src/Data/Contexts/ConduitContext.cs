@@ -46,8 +46,7 @@ namespace Realworlddotnet.Data.Contexts
 
                 entity.HasOne(d => d.AuthorUsernameNavigation)
                     .WithMany(p => p.Articles)
-                    .HasForeignKey(d => d.AuthorUsername)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .HasForeignKey(d => d.AuthorUsername);
 
                 entity.HasMany(d => d.Tags)
                     .WithMany(p => p.Articles)

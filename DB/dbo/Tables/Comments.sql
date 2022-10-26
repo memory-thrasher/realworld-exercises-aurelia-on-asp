@@ -5,6 +5,7 @@
     [ArticleId] UNIQUEIDENTIFIER   NOT NULL,
     [CreatedAt] DATETIMEOFFSET (7) NOT NULL,
     [UpdatedAt] DATETIMEOFFSET (7) NOT NULL,
+    [DeletedAt] DATETIMEOFFSET (7) NULL,
     CONSTRAINT [PK_Comments] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Comments_Articles_ArticleId] FOREIGN KEY ([ArticleId]) REFERENCES [dbo].[Articles] ([Id]),
     CONSTRAINT [FK_Comments_Users_Username] FOREIGN KEY ([Username]) REFERENCES [dbo].[Users] ([Username])

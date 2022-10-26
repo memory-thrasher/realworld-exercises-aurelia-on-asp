@@ -175,13 +175,14 @@ namespace Realworlddotnet.Data.Services
 
         public void RemoveArticleComment(Comment comment)
         {
-            _context.Comments.Remove(comment);
+            comment.DeletedAt = DateTimeOffset.Now;
         }
 
         public async Task<List<Comment>> GetCommentsBySlugAsync(string slug, string? username,
             CancellationToken cancellationToken)
         {
             return await _context.Comments.Where(x => x.Article.Slug == slug)
+                .Where(comment => comment.DeletedAt == null)
                 .Include(x => x.UsernameNavigation)
                 .ThenInclude(x => x.FollowedUserFollowerUsernameNavigations.Where(fu => fu.Username == username))
                 .ToListAsync(cancellationToken);

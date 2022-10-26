@@ -11,6 +11,7 @@ namespace Realworlddotnet.Core.Entities
         public Guid ArticleId { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
+        public DateTimeOffset? DeletedAt { get; set; }
 
         public virtual Article Article { get; set; } = null!;
         public virtual User UsernameNavigation { get; set; } = null!;
