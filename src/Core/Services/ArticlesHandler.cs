@@ -145,11 +145,23 @@ namespace Realworlddotnet.Core.Services
                 });
             }
 
-            var comment = new Comment() { Body = commentDto.body, Username = user.Username, ArticleId = article.Id, CreatedAt = System.DateTimeOffset.Now };
+            var comment = GetComment(commentDto, user, article);
             _repository.AddArticleComment(comment);
 
             await _repository.SaveChangesAsync(cancellationToken);
             return comment;
+        }
+
+        private static Comment GetComment(CommentDto commentDto, User user, Article article)
+        {
+            return new Comment()
+            {
+                Body = commentDto.body,
+                Username = user.Username,
+                ArticleId = article.Id,
+                CreatedAt = DateTimeOffset.Now,
+                DeletedAt = null
+            };
         }
 
         public async Task RemoveCommentAsync(string slug, int commentId, string username,
