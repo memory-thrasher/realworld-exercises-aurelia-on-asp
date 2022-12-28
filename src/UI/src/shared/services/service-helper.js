@@ -2,6 +2,8 @@ import {HttpError} from "./HttpError";
 
 export function status(response) {
   if (response.status >= 200 && response.status < 400) {
+    if (response.headers.get('content-type') == null)
+      return response.text();
     if (response.headers.get('content-type').includes('text/html'))
       return response.text();
     if (response.headers.get('content-type').includes('application/json'))
