@@ -67,5 +67,6 @@
     <Build Include="dbo\Tables\ArticleTag.sql" />
     <Build Include="dbo\Tables\Articles.sql" />
     <Build Include="dbo\Tables\ArticleFavorites.sql" />
+    <Build Include="dbo\PostStatsView.sql" />
   </ItemGroup>
 </Project>
